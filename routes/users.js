@@ -16,7 +16,8 @@ router.post('/', (req, res, next) => {
 router.get('/', (req, res, next) => {
   console.log(req.query);
     if(req.query.username === 'admin' && req.query.password === '123456') {
-    const token = jwt.sign({username: req.query.username}, 'textjwt', {expiresIn: '60s', algorithm: 'HS256'})
+    // textjwt: 加密规则 expiresIn: 过期时间 algorithm: 加密算法
+    const token = jwt.sign({username: req.query.username}, 'testjwt', {expiresIn: '10s', algorithm: 'HS256'})
     res.json({
       code: 1,
       message: "登录成功!",

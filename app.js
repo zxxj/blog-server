@@ -20,9 +20,38 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
+// 解析jwt
+const { expressjwt } = require('express-jwt')
+app.use(
+  expressjwt({
+    secret: 'testjwt', // 加密规则
+    algorithms: ['HS256'], // 加密算法
+  })
+  // 排除掉不需要token就能访问的接口
+  .unless({
+    path: [
+      "/api/users",
+      // api/articles/users/:id 想要排除掉这样的接口必须使用正则
+      /^\/api\/articles\/users\/\w+/,
+      {
+        url: /^\/api\/articles\/\w+/,
+        method: ["GET"]
+      }
+    ]
+  }) 
+)
+
 app.use('/api/articles', articlesRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/upload', uploadRouter);
+
+app.use((err, req, res, next) => {
+  if(err.name === 'UnauthorizedError') {
+    res.status(401).json({ code: 0, message: "无效的token或没有传递token"})
+  }else {
+    next(err)
+  }
+})
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -4,7 +4,7 @@ const router = express.Router();
 // 发布文章
 router.post('/', (req, res, next) => {
   console.log(req.body);
-
+  console.log(req.auth); // { username: 'admin', iat: 1718120464, exp: 1718120474 } token信息
   res.json({
     code: 1,
     message: "文章发布成功!",
