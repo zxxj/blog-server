@@ -6,6 +6,7 @@ mongoose.connect('mongodb://localhost/test-blog').then(res => {
 }).catch(err => {
 	// console.log(err);
 	console.log("连接失败");
+
 })
 
 const Schema = mongoose.Schema;
